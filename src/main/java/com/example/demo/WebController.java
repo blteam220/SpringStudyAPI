@@ -14,15 +14,40 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import com.example.domain.model.entity.SpringStudyEntity;
+//import com.example.domain.repository.SpringStudyRepository;
 import com.example.validation.*;
+
+
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+
+
 
 @RestController
 @RequestMapping("/sampleGET")
 public class WebController {
 	
+	/*
+	 * ※メッセージプロパティを使うには
+	 * 「application.properties」に設定を記入
+	 * 「messages_ja.properties」にキーと表示したい文字を記入
+	 * 「messages.properties」のファイルを作成(中身は空) 
+	 * */
 	@Autowired
 	protected MessageSource messageSource;
 	
+	//@Autowired
+	//private SpringStudyEntity studyEntity;
+
+	/*
+	@Autowired
+	private SpringStudyRepository springStudyRepository;
+	*/
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String SyainInfo(@RequestParam("UserId") String userId){
@@ -32,6 +57,10 @@ public class WebController {
 		
 		System.out.println("Controller:" + valChack);
 		
+		
+		//List<SpringStudyEntity> players = springStudyRepository.findAll();
+		return "";
+		/*
 		if(valChack == true) {
 			//Stringをint型へ
 			int userIdInt = Integer.parseInt(userId);
@@ -67,5 +96,6 @@ public class WebController {
 		else {
 			return messageSource.getMessage("numberCheck", null, Locale.JAPAN);
 		}
+		*/
 	}	
 }

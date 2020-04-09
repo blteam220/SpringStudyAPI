@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.entity.SpringStudyEntity;
 
-//import java.util.ArrayList;
 import java.util.List;
 
+//EntityのDBアクセスを行うクラス
 @Repository
 public interface SpringStudyRepository extends JpaRepository<SpringStudyEntity, Integer> {
 	

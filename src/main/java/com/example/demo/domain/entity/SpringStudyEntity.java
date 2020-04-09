@@ -1,4 +1,4 @@
-package com.example.domain.model.entity;
+package com.example.demo.domain.entity;
 
 //javax.persistence　のインポートを使うにはpom.xmlの書き換えが必要　62~66行目追加
 import javax.persistence.Entity;
@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 
 //lombok　のインポートを使うにはpom.xmlの書き換えが必要　69~73行目追加
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
 
 /*
 import javax.persistence.GeneratedValue;
@@ -28,22 +28,30 @@ import javax.persistence.GenerationType;
 
 
 @Entity
-@Table(name = "Employee")
-@Getter
-@Setter
+@Table(name = "employee")
 public class SpringStudyEntity {
 
 	@Id
 	@Column(name = "employee_id")
+	@Getter
+	@Setter
 	private Integer employeeId;
 	
 	@Column(name = "employee_name")
+	@Getter
+	@Setter
 	private String employeeName;
 	
 	@Column(name = "age")
+	@Getter
+	@Setter
 	private Integer age;
 	
 	@Column(name = "department")
+	@Getter
+	@Setter
 	private String department;
+	
+	
 
 }

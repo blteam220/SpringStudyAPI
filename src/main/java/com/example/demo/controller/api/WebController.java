@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controller.api;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,9 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
-import com.example.domain.model.entity.SpringStudyEntity;
-//import com.example.domain.repository.SpringStudyRepository;
-import com.example.validation.*;
-
-
-
+import com.example.demo.domain.entity.SpringStudyEntity;
+import com.example.demo.domain.repository.SpringStudyRepository;
+import com.example.demo.domain.validation.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -44,10 +41,10 @@ public class WebController {
 	//@Autowired
 	//private SpringStudyEntity studyEntity;
 
-	/*
+	//ここをコメントにしないとエラーが出る
 	@Autowired
 	private SpringStudyRepository springStudyRepository;
-	*/
+	
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String SyainInfo(@RequestParam("UserId") String userId){
@@ -57,9 +54,13 @@ public class WebController {
 		
 		System.out.println("Controller:" + valChack);
 		
+		//Stringをint型へ
+		int userIdInt = Integer.parseInt(userId);
 		
 		//List<SpringStudyEntity> players = springStudyRepository.findAll();
-		return "";
+		List<SpringStudyEntity> emp = springStudyRepository.findById(userIdInt);
+		
+		return emp.get(1).getAge().toString();
 		/*
 		if(valChack == true) {
 			//Stringをint型へ

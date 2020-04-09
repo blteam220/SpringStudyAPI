@@ -7,10 +7,11 @@ import com.example.demo.domain.entity.SpringStudyEntity;
 
 import java.util.List;
 
-//EntityのDBアクセスを行うクラス
+//　@Repository : EntityのDBアクセスを行うクラス
 @Repository
 public interface SpringStudyRepository extends JpaRepository<SpringStudyEntity, Integer> {
 	
+	// IDをもとにDBからデータを取得
 	List<SpringStudyEntity> findById(int id);
 
 }

@@ -73,7 +73,7 @@ public class WebController {
 			 * 「messages_ja.properties」にキーと表示したい文字を記入
 			 * 「messages.properties」のファイルを作成(中身は空)  
 			*/
-			// メッセージプロパティの値を返す
+			// messages_ja.propertiesのキーと場所を指定して、メッセージプロパティの値を返す
 			return messageSource.getMessage("numberCheck", null, Locale.JAPAN);
 		}
 	}	

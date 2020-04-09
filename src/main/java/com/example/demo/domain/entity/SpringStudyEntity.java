@@ -10,8 +10,10 @@ import lombok.Data;
 /*
  * 使用するアノテーション
  * @Entity　：　Entityクラス
- * @Id : 主キーを指定
+ * @@Table : テーブル名
  * @DATA ：　getter,setter生成
+ * @Id : 主キーを指定
+ * @Column : カラム名
  */
 
 @Entity

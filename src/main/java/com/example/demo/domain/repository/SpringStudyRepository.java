@@ -14,4 +14,5 @@ public interface SpringStudyRepository extends JpaRepository<SpringStudyEntity, 
 	// IDをもとにDBからデータを取得
 	List<SpringStudyEntity> findById(int id);
 
+
 }

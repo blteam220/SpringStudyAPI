@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 @Table(name = "working")
 //@Data
 public class workingEntity {
-	
+	@Id
 	@Column(name = "employee_id")
 	private Integer employeeId;
 	

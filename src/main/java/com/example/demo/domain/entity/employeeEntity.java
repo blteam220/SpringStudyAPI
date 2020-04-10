@@ -38,9 +38,11 @@ public class employeeEntity {
 	@Column(name = "updated_user")
 	private String updated_user;
 	
+	/*
 	//Joinする部署名
 	@Embedded
 	private employeeDepartmentJoin departmentName;
+	*/
 
 	public Integer getEmployeeId() {
 		return employeeId;

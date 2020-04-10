@@ -99,7 +99,7 @@ public class WebController {
 		    // 取得した社員データを入れる
 		    outputObj.put("data", empObj);
 		    
-		    // Listにデータ(status,massage)が入ったオブジェクトを入れる
+		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);
 		    
 		    // JSON型のListを返す

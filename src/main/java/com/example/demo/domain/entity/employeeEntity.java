@@ -1,9 +1,9 @@
 package com.example.demo.domain.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 
@@ -19,7 +19,7 @@ import lombok.Data;
 @Entity
 @Table(name = "employee")
 @Data
-public class SpringStudyEntity {
+public class employeeEntity {
 
 	@Id
 	@Column(name = "employee_id")
@@ -36,6 +36,4 @@ public class SpringStudyEntity {
 	
 	@Column(name = "updated_user")
 	private String updated_user;
-	
-	
 }

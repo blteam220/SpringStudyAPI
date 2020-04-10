@@ -1,9 +1,8 @@
 package com.example.demo.domain.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
 
 import lombok.Data;
 
@@ -12,30 +11,30 @@ import lombok.Data;
  * @Entity　：　Entityクラス
  * @@Table : テーブル名
  * @DATA ：　getter,setter生成
- * @Id : 主キーを指定
  * @Column : カラム名
  */
 
 @Entity
-@Table(name = "employee")
+@Table(name = "working")
 @Data
-public class SpringStudyEntity {
+public class workingEntity {
 
-	@Id
 	@Column(name = "employee_id")
 	private Integer employeeId;
 	
-	@Column(name = "employee_name")
-	private String employeeName;
+	@Column(name = "year")
+	private String year;
 	
-	@Column(name = "age")
-	private Integer age;
+	@Column(name = "month")
+	private String month;
 	
-	@Column(name = "department")
-	private Integer department;
+	@Column(name = "day")
+	private String day;
+	
+	@Column(name = "working_hour")
+	private Integer working_hour;
 	
 	@Column(name = "updated_user")
 	private String updated_user;
-	
-	
 }
+

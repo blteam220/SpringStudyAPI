@@ -14,5 +14,7 @@ public class employeeDepartmentJoinEntity implements Serializable{
 	@OneToOne
 	@JoinColumn(name="a")
 	private EntityBeta a;
+	
+	///aaaaaaaaaaaaaaaaaaaaaaa
 
 }

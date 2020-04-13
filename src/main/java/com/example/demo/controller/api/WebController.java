@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.domain.entity.SpringStudyEntity;
-import com.example.demo.domain.repository.SpringStudyRepository;
+import com.example.demo.domain.entity.EmployeeEntity;
+import com.example.demo.domain.repository.EmployeeDepartmentJoinRepository;
 import com.example.demo.domain.validation.WebValidation;
 
 /* 
@@ -27,10 +27,10 @@ public class WebController {
 	// @Autowired : newをしてくれる(メッセージプロパティで使用)
 	@Autowired
 	protected MessageSource messageSource;
-
+	
 	// @Autowired : newをしてくれる(DBからのデータの取得で使用)
 	@Autowired
-	private SpringStudyRepository springStudyRepository;
+	private EmployeeDepartmentJoinRepository employeeDepartmentJoinRepository;
 	
 	/*
 	 * クライアントからのリクエストに対してマッピングを行う  methodオプションでGETを指定
@@ -60,13 +60,13 @@ public class WebController {
 			int userIdInt = Integer.parseInt(userId);
 			
 			// 引数にIDを入力し、データを取得
-			List<SpringStudyEntity> emp = springStudyRepository.findById(userIdInt);
+			List<EmployeeEntity> emp = employeeDepartmentJoinRepository.findById(userIdInt);
 			
 			// empObjにDBから取得したデータを入れる
 			empObj.put("社員番号", emp.get(0).getEmployeeId().toString());
 			empObj.put("名前", emp.get(0).getEmployeeName().toString());
 			empObj.put("年齢", emp.get(0).getAge().toString());
-			empObj.put("所属", emp.get(0).getDepartment().toString());
+			empObj.put("所属", emp.get(0).getDepartmentName().getDepartmentName().toString());
 		    
 		    // status番号を入れる(成功)
 		    outputObj.put("status",statusNum);

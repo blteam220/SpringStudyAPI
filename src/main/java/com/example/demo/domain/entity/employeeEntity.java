@@ -1,12 +1,13 @@
 package com.example.demo.domain.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-//import lombok.Data;
+import lombok.Data;
 
 /*
  * 使用するアノテーション
@@ -19,8 +20,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "employee")
-//@Data
-public class employeeEntity {
+@Data
+public class EmployeeEntity {
 	
 	@Id
 	@Column(name = "employee_id")
@@ -38,49 +39,8 @@ public class employeeEntity {
 	@Column(name = "updated_user")
 	private String updated_user;
 	
-	/*
-	//Joinする部署名
-	@Embedded
-	private employeeDepartmentJoin departmentName;
-	*/
-
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public Integer getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Integer department) {
-		this.department = department;
-	}
-
-	public String getUpdated_user() {
-		return updated_user;
-	}
-
-	public void setUpdated_user(String updated_user) {
-		this.updated_user = updated_user;
-	}
+	//テーブルをjoin
+	@ManyToOne
+	@JoinColumn(name="employee_ibfk_1")
+	private  DepartmentEntity departmentName;
 }

@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-//import lombok.Data;
+import lombok.Data;
 
 /*
  * 使用するアノテーション
@@ -18,8 +18,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "developer")
-//@Data
-public class developerEntity {
+@Data
+public class DeveloperEntity {
 	
 	@Id
 	@Column(name = "developer_id")
@@ -30,28 +30,4 @@ public class developerEntity {
 	
 	@Column(name = "updated_user")
 	private String updated_user;
-
-	public Integer getDeveloperId() {
-		return developerId;
-	}
-
-	public void setDeveloperId(Integer developerId) {
-		this.developerId = developerId;
-	}
-
-	public String getDeveloperName() {
-		return developerName;
-	}
-
-	public void setDeveloperName(String developerName) {
-		this.developerName = developerName;
-	}
-
-	public String getUpdated_user() {
-		return updated_user;
-	}
-
-	public void setUpdated_user(String updated_user) {
-		this.updated_user = updated_user;
-	}
 }

@@ -5,7 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-//import lombok.Data;
+import lombok.Data;
 
 /*
  * 使用するアノテーション
@@ -17,8 +17,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "working")
-//@Data
-public class workingEntity {
+@Data
+public class WorkingEntity {
 	@Id
 	@Column(name = "employee_id")
 	private Integer employeeId;
@@ -37,53 +37,4 @@ public class workingEntity {
 	
 	@Column(name = "updated_user")
 	private String updated_user;
-
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public String getMonth() {
-		return month;
-	}
-
-	public void setMonth(String month) {
-		this.month = month;
-	}
-
-	public String getDay() {
-		return day;
-	}
-
-	public void setDay(String day) {
-		this.day = day;
-	}
-
-	public Integer getWorking_hour() {
-		return working_hour;
-	}
-
-	public void setWorking_hour(Integer working_hour) {
-		this.working_hour = working_hour;
-	}
-
-	public String getUpdated_user() {
-		return updated_user;
-	}
-
-	public void setUpdated_user(String updated_user) {
-		this.updated_user = updated_user;
-	}
 }
-

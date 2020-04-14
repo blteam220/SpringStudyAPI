@@ -1,6 +1,7 @@
 package com.example.demo.domain.entity;
 
 import javax.persistence.Id;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;

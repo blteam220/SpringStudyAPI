@@ -3,41 +3,45 @@ package com.example.demo.controller.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.entity.EmployeeEntity;
 import com.example.demo.domain.repository.EmployeeDepartmentJoinRepository;
 import com.example.demo.domain.validation.WebValidation;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /* 
  * @RestController : sonやXML等を返すWebAPI用のコントローラで使用する
  * @RequestMapping : クライアントからのリクエストに対してマッピングを行う
  */
 @RestController
-@RequestMapping("/sampleGET")
+@RequestMapping("/")
 public class WebController {
 	
 	// @Autowired : newをしてくれる(メッセージプロパティで使用)
 	@Autowired
 	protected MessageSource messageSource;
 	
-	// @Autowired : newをしてくれる(DBからのデータの取得で使用)
+	// @Autowired : newをしてくれる(DBからのデータの取得で使用) 社員情報検索
 	@Autowired
 	private EmployeeDepartmentJoinRepository employeeDepartmentJoinRepository;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	/*
 	 * クライアントからのリクエストに対してマッピングを行う  methodオプションでGETを指定
 	 * @RequestParam : URLのパラメータを取得
 	 */
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping("/employeeInfo")
 	public String SyainInfo(@RequestParam("UserId") String userId){
 		// status番号
 		String statusNum;
@@ -121,44 +125,50 @@ public class WebController {
 		String statusNum;
 		
 		// WebValidation呼び出し(数字チェック)
-		boolean valChack = WebValidation.numberCheck(userId);
+		boolean valChackId = WebValidation.numberCheck(userId);
+		boolean valChackYear = WebValidation.numberCheck(year);
+		boolean valChackMonth = WebValidation.numberCheck(month);
 		
 		//　リストにデータが入っていく
 		List<JSONObject> objList = new ArrayList<JSONObject>();
 		// 出力用(status,message,data) JSON形式オブジェクト
 		JSONObject outputObj =  new JSONObject();
-		//　社員データ用(社員番号,名前,年齢,部署)　JSON形式オブジェクト
-		JSONObject empObj =  new JSONObject();
-		
+
 		// URLのパラメータが数字の場合
-		if(valChack == true) {
+		if(valChackId == true && valChackYear == true && valChackMonth == true) {
 			// status番号
 			statusNum = "200";
 			
 			// Stringをint型へ
-			int userIdInt = Integer.parseInt(userId);
+			int userIdInt = Integer.parseInt(userId);			
+
+			//SQL実行データ取得(employee_id,year,monthを入れて、勤務時間を戻す)			
+			List<Map<String, Object>> workTimeData = jdbcTemplate.queryForList("SELECT sum(CASE WHEN working_hour < 24 THEN working_hour ELSE NULL END) as '作業時間' FROM employee JOIN working ON employee.employee_id = working.employee_id WHERE employee.employee_id = " + userIdInt + " AND working.year = '" + year + "' AND working.month = '" + month + "'");
+
+			//勤務時間合計
+			String workingHours = "";
+
+            // データの作業時間
+            workingHours = workTimeData.get(0).get("作業時間").toString();
+            System.out.println("作業時間=" + workingHours);
 			
-			// 引数にIDを入力し、データを取得
-			List<EmployeeEntity> emp = employeeDepartmentJoinRepository.findById(userIdInt);
-			
-			// empObjにDBから取得したデータを入れる
-			empObj.put("社員番号", emp.get(0).getEmployeeId().toString());
-			empObj.put("名前", emp.get(0).getEmployeeName().toString());
-			empObj.put("年齢", emp.get(0).getAge().toString());
-			empObj.put("所属", emp.get(0).getDepartment().toString());
-		    
+		    // JSON形式でデータを入れる
 		    // status番号を入れる(成功)
 		    outputObj.put("status",statusNum);
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
-		    // 取得した社員データを入れる
-		    outputObj.put("data", empObj);
+		    // 社員IDを入れる
+		    outputObj.put("employee_id", userId);
+		    // 年入れる
+		    outputObj.put("year", year);
+		    // 月を入れる
+		    outputObj.put("month", month);
+		    // 勤務時間を入れる
+		    outputObj.put("workingHours", workingHours);
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);
-		    
-		    emp.get(0).getWorkingList().forEach(System.out::println);
-		    
+
 		    // JSON型のListを返す
 		    return objList.get(0).toString();
 		}
@@ -177,8 +187,6 @@ public class WebController {
 		    outputObj.put("status",statusNum);
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
-		    // 取得した社員データを入れる
-		    outputObj.put("data", empObj);
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);

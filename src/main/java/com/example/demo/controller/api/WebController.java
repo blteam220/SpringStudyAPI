@@ -1,12 +1,14 @@
 package com.example.demo.controller.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.entity.EmployeeEntity;
+import com.example.demo.domain.entity.WorkingEntity;
+import com.example.demo.domain.entity.WorkingKey;
 import com.example.demo.domain.repository.EmployeeDepartmentJoinRepository;
+import com.example.demo.domain.repository.WorkingRepository;
 import com.example.demo.domain.validation.WebValidation;
 
 /* 
@@ -32,6 +37,10 @@ public class WebController {
 	// @Autowired : newをしてくれる(DBからのデータの取得で使用)
 	@Autowired
 	private EmployeeDepartmentJoinRepository employeeDepartmentJoinRepository;
+	
+	// @Autowired : newをしてくれる(DBからのデータの取得で使用)
+	@Autowired
+	private WorkingRepository workingRepository;
 	
 	/*
 	 * クライアントからのリクエストに対してマッピングを行う  methodオプションでGETを指定
@@ -112,8 +121,8 @@ public class WebController {
 	 * クライアントからのリクエストに対してマッピングを行う  methodオプションでGETを指定
 	 * @RequestParam : URLのパラメータを取得
 	 */
-	@GetMapping("/employee/working")
-	public String GetEmployeeWorking(@RequestParam("userid") String userId,
+	@GetMapping("/employee/working/list")
+	public String GetEmployeeWorkingList(@RequestParam("userid") String userId,
 			@RequestParam("year") String year,
 			@RequestParam("month") String month){
 
@@ -121,43 +130,53 @@ public class WebController {
 		String statusNum;
 		
 		// WebValidation呼び出し(数字チェック)
-		boolean valChack = WebValidation.numberCheck(userId);
+		boolean valChack = this.valCheck(new ArrayList<String>(Arrays.asList(userId,year,month)));
 		
 		//　リストにデータが入っていく
 		List<JSONObject> objList = new ArrayList<JSONObject>();
 		// 出力用(status,message,data) JSON形式オブジェクト
 		JSONObject outputObj =  new JSONObject();
-		//　社員データ用(社員番号,名前,年齢,部署)　JSON形式オブジェクト
-		JSONObject empObj =  new JSONObject();
+		//　勤務時間データ用　JSON形式オブジェクト
+		List<JSONObject> workObj = new ArrayList<JSONObject>();
 		
 		// URLのパラメータが数字の場合
-		if(valChack == true) {
+		if(true == valChack) {
 			// status番号
 			statusNum = "200";
 			
 			// Stringをint型へ
 			int userIdInt = Integer.parseInt(userId);
-			
+		
 			// 引数にIDを入力し、データを取得
-			List<EmployeeEntity> emp = employeeDepartmentJoinRepository.findById(userIdInt);
+			WorkingEntity working = new WorkingEntity();
+			WorkingKey key = new WorkingKey();
 			
-			// empObjにDBから取得したデータを入れる
-			empObj.put("社員番号", emp.get(0).getEmployeeId().toString());
-			empObj.put("名前", emp.get(0).getEmployeeName().toString());
-			empObj.put("年齢", emp.get(0).getAge().toString());
-			empObj.put("所属", emp.get(0).getDepartment().toString());
-		    
+			// 検索条件の設定
+			key.setEmployeeId(userIdInt);
+			key.setYear(year);
+			key.setMonth(month);
+			working.setWorkingKey(key);
+			
+			List<WorkingEntity> work = workingRepository.findAll(Example.of(working));
+			for(WorkingEntity w : work){
+				JSONObject obj =  new JSONObject();
+				obj.put("employee_id", w.getWorkingKey().getEmployeeId());
+				obj.put("year", w.getWorkingKey().getYear());
+				obj.put("month", w.getWorkingKey().getMonth());
+				obj.put("day", w.getWorkingKey().getDay());
+				obj.put("working_hour", w.getWorking_hour());
+				workObj.add(obj);
+	        }
+					    
 		    // status番号を入れる(成功)
 		    outputObj.put("status",statusNum);
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
 		    // 取得した社員データを入れる
-		    outputObj.put("data", empObj);
+		    outputObj.put("data", workObj);
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);
-		    
-		    emp.get(0).getWorkingList().forEach(System.out::println);
 		    
 		    // JSON型のListを返す
 		    return objList.get(0).toString();
@@ -178,7 +197,7 @@ public class WebController {
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
 		    // 取得した社員データを入れる
-		    outputObj.put("data", empObj);
+		    outputObj.put("data", workObj);
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);
@@ -186,5 +205,19 @@ public class WebController {
 		    // JSON型のListを返す
 		    return objList.get(0).toString();
 		}
+	}
+	
+	/*
+	 * 値のチェックを行う
+	 * obj : Stringオブジェクトを指定
+	 */
+	private Boolean valCheck(List<String> obj) {
+		for(String s : obj){
+			boolean valChack = WebValidation.numberCheck(s);
+			if (false == valChack) {
+				return false;
+			}
+        }
+		return true;
 	}
 }

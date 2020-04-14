@@ -51,6 +51,6 @@ public class EmployeeEntity {
 	private  DepartmentEntity departmentName;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_ibfk_2")
     private List<WorkingEntity> workingList = new ArrayList<>();
 }

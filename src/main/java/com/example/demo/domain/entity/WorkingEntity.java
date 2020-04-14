@@ -1,7 +1,11 @@
 package com.example.demo.domain.entity;
 
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -19,22 +23,18 @@ import lombok.Data;
 @Table(name = "working")
 @Data
 public class WorkingEntity {
-	@Id
-	@Column(name = "employee_id")
-	private Integer employeeId;
 	
-	@Column(name = "year")
-	private String year;
-	
-	@Column(name = "month")
-	private String month;
-	
-	@Column(name = "day")
-	private String day;
+	@EmbeddedId
+    private WorkingKey workingKey;
 	
 	@Column(name = "working_hour")
 	private Integer working_hour;
 	
 	@Column(name = "updated_user")
 	private String updated_user;
+	
+	//テーブルをjoin
+	//@ManyToOne
+	//@JoinColumn(name="employee_ibfk_2", insertable = false, updatable = false)
+	//private  EmployeeEntity employee;
 }

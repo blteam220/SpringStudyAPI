@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -51,6 +52,5 @@ public class EmployeeEntity {
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinColumn(name = "employee_ibfk_2")
-    private List<WorkingEntity> workingList;
- 
+    private List<WorkingEntity> workingList = new ArrayList<>();
 }

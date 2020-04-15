@@ -383,7 +383,7 @@ public class WebController {
 			//パスワードチェック
 			Optional<UserEntity> tmpOpt = userRepository.findFirstByPassword(password);
 			
-	    	if(tmpOpt.get().getPassword().equals(password)) {
+	    	if(!tmpOpt.get().getPassword().equals(password)) {
 	    		return false;
 	    	} else {
 	    		UserEntity tmpUserEntity = tmpOpt.get();

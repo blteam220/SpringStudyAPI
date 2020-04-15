@@ -5,14 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,11 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.entity.EmployeeEntity;
 import com.example.demo.domain.entity.WorkingEntity;
-import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.domain.entity.WorkingKey;
 import com.example.demo.domain.repository.EmployeeDepartmentJoinRepository;
 import com.example.demo.domain.repository.WorkingRepository;
-import com.example.demo.domain.repository.UserRepository;
 import com.example.demo.domain.validation.WebValidation;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -47,10 +43,6 @@ public class WebController {
 	// @Autowired : newをしてくれる(DBからのデータの取得で使用)
 	@Autowired
 	private WorkingRepository workingRepository;
-	
-	// @Autowired : newをしてくれる(DBへの登録処理で使用)
-	@Autowired
-	private UserRepository userRepository;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -128,49 +120,6 @@ public class WebController {
 		    return objList.get(0).toString();
 		}
 	}
-	@GetMapping(path = "auth")
-    public String getToken(@RequestParam("password") String password) {
-    	// 登録データ設定
-    	UserEntity userEntity = new UserEntity();
-    	userEntity.setName(password);
-    	userEntity.setEmail(password);
-    	userEntity.setAdmin(true);
-    	userEntity.setPassword(password);
-    	
-    	String statusNum = "200";
-		//　リストにデータが入っていく
-    	JSONObject outputObj =  new JSONObject();
-    	
-    	try {
-        	// データ登録
-    		UserEntity returnData = userRepository.save(userEntity);
-        	outputObj.put("password",returnData.getPassword());
-    	} catch (Exception e) {
-    		statusNum  = "400";
-     	}
-    	/*
-    	try {
-    		// データ認証
-    		Optional<UserEntity> passCheck = userRepository.findFirstByPassword(password);
-    		statusNum  = "500";
-    	} catch (Exception e) {
-    		statusNum  = "500";
-     	}
-     	*/
-	    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
-    	List<JSONObject> objList = new ArrayList<JSONObject>();
-//    	if(statusNum.equals("500")) {
-//    		return objList.add(outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN)));
-//    	}
-    	
-    	outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
-    	
-
-	    objList.add(outputObj);
-	    
-	    // JSON型のListを返す
-	    return objList.get(0).toString();
-    }
 	
 	/*
 	 * クライアントからのリクエストに対してマッピングを行う  methodオプションでGETを指定

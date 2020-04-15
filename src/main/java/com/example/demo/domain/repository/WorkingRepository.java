@@ -12,5 +12,5 @@ import com.example.demo.domain.entity.WorkingEntity;
 public interface WorkingRepository extends JpaRepository<WorkingEntity, Integer>{
 	
 	// IDをもとにDBからデータを取得
-	List<WorkingEntity> findById(int id);
+	//List<WorkingEntity> findById(int id);
 }

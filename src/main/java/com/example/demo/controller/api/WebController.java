@@ -59,9 +59,11 @@ public class WebController {
 	 * @RequestParam : URLのパラメータを取得
 	 */
 	@RequestMapping("/employeeInfo")
-	public String SyainInfo(@RequestParam("UserId") String userId){
+	public String SyainInfo(@RequestParam("UserId") String userId,
+			@RequestParam("password") String password){
+		
 		// status番号
-		String statusNum;
+		String statusNum = "200";
 		
 		// WebValidation呼び出し(数字チェック)
 		boolean valChack = WebValidation.numberCheck(userId);
@@ -70,14 +72,21 @@ public class WebController {
 		List<JSONObject> objList = new ArrayList<JSONObject>();
 		// 出力用(status,message,data) JSON形式オブジェクト
 		JSONObject outputObj =  new JSONObject();
+		
+		// トークン(password)チェック
+	   	if(!passwordCheck(password)) {
+	   		statusNum = "500";
+	   		outputObj.put("status",statusNum);
+	   		outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
+	   		objList.add(outputObj);
+    		return objList.toString();
+    	}
+		
 		//　社員データ用(社員番号,名前,年齢,部署)　JSON形式オブジェクト
 		JSONObject empObj =  new JSONObject();
 		
 		// URLのパラメータが数字の場合
 		if(valChack == true) {
-			// status番号
-			statusNum = "200";
-			
 			// Stringをint型へ
 			int userIdInt = Integer.parseInt(userId);
 			
@@ -128,6 +137,11 @@ public class WebController {
 		    return objList.get(0).toString();
 		}
 	}
+	
+	/*
+	 * クライアントからのリクエストに対してマッピングを行う
+	 * @RequestParam : URLのパラメータを取得
+	 */
 	@GetMapping(path = "auth")
     public String getToken(@RequestParam("password") String password) {
     	// 登録データ設定
@@ -148,24 +162,9 @@ public class WebController {
     	} catch (Exception e) {
     		statusNum  = "400";
      	}
-    	/*
-    	try {
-    		// データ認証
-    		Optional<UserEntity> passCheck = userRepository.findFirstByPassword(password);
-    		statusNum  = "500";
-    	} catch (Exception e) {
-    		statusNum  = "500";
-     	}
-     	*/
 	    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
     	List<JSONObject> objList = new ArrayList<JSONObject>();
-//    	if(statusNum.equals("500")) {
-//    		return objList.add(outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN)));
-//    	}
-    	
     	outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
-    	
-
 	    objList.add(outputObj);
 	    
 	    // JSON型のListを返す
@@ -179,10 +178,11 @@ public class WebController {
 	@GetMapping("/employee/working")
 	public String GetEmployeeWorking(@RequestParam("userid") String userId,
 			@RequestParam("year") String year,
-			@RequestParam("month") String month){
+			@RequestParam("month") String month,
+			@RequestParam("password") String password){
 
 		// status番号
-		String statusNum;
+		String statusNum = "200";
 		
 		// WebValidation呼び出し(数字チェック)
 		boolean valChackId = WebValidation.numberCheck(userId);
@@ -194,11 +194,17 @@ public class WebController {
 		// 出力用(status,message,data) JSON形式オブジェクト
 		JSONObject outputObj =  new JSONObject();
 
+		// トークン(password)チェック
+	   	if(!passwordCheck(password)) {
+	   		statusNum = "500";
+	   		outputObj.put("status",statusNum);
+	   		outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
+	   		objList.add(outputObj);
+    		return objList.toString();
+    	}
+		
 		// URLのパラメータが数字の場合
 		if(valChackId == true && valChackYear == true && valChackMonth == true) {
-			// status番号
-			statusNum = "200";
-			
 			// Stringをint型へ
 			int userIdInt = Integer.parseInt(userId);			
 
@@ -263,10 +269,11 @@ public class WebController {
 	@GetMapping("/employee/working/list")
 	public String GetEmployeeWorkingList(@RequestParam("userid") String userId,
 			@RequestParam("year") String year,
-			@RequestParam("month") String month){
+			@RequestParam("month") String month,
+			@RequestParam("password") String password){
 
 		// status番号
-		String statusNum;
+		String statusNum = "200";
 		
 		// WebValidation呼び出し(数字チェック)
 		boolean valChack = this.valCheck(new ArrayList<String>(Arrays.asList(userId,year,month)));
@@ -278,10 +285,17 @@ public class WebController {
 		//　勤務時間データ用　JSON形式オブジェクト
 		List<JSONObject> workObj = new ArrayList<JSONObject>();
 		
+		// トークン(password)チェック
+	   	if(!passwordCheck(password)) {
+	   		statusNum = "500";
+	   		outputObj.put("status",statusNum);
+	   		outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
+	   		objList.add(outputObj);
+    		return objList.toString();
+    	}
+		
 		// URLのパラメータが数字の場合
 		if(true == valChack) {
-			// status番号
-			statusNum = "200";
 			
 			// Stringをint型へ
 			int userIdInt = Integer.parseInt(userId);
@@ -357,6 +371,26 @@ public class WebController {
 				return false;
 			}
         }
+		return true;
+	}
+	
+	/*
+	 * パスワードのチェックを行う
+	 * obj : Stringオブジェクトを指定
+	 */
+	private Boolean passwordCheck(String password) {
+		try {
+			//パスワードチェック
+			Optional<UserEntity> tmpOpt = userRepository.findFirstByPassword(password);
+	    	if(tmpOpt.isEmpty()) {
+	    		return false;
+	    	} else {
+	    		UserEntity tmpUserEntity = tmpOpt.get();
+	    		userRepository.delete(tmpUserEntity);
+	    	}
+		} catch (Exception e) {
+			return false;
+		}
 		return true;
 	}
 }

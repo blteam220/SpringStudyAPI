@@ -379,10 +379,12 @@ public class WebController {
 	 * obj : Stringオブジェクトを指定
 	 */
 	private Boolean passwordCheck(String password) {
+		
 		try {
 			//パスワードチェック
 			Optional<UserEntity> tmpOpt = userRepository.findFirstByPassword(password);
-	    	if(tmpOpt.isEmpty()) {
+			//tmpOpt.get().equals(tmpOpt);
+	    	if(!tmpOpt.get().getPassword().equals(password)) {
 	    		return false;
 	    	} else {
 	    		UserEntity tmpUserEntity = tmpOpt.get();

@@ -326,7 +326,7 @@ public class WebController {
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
 		    // 取得した社員データを入れる
-		    outputObj.put("data", workObj);
+		    outputObj.put("data", workObj.toString());
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);
@@ -350,7 +350,7 @@ public class WebController {
 		    // messageを入れる
 		    outputObj.put("messeage",messageSource.getMessage(statusNum, null, Locale.JAPAN));
 		    // 取得した社員データを入れる
-		    outputObj.put("data", workObj);
+		    outputObj.put("data", "");
 		    
 		    // Listにデータ(status,massage,data)が入ったオブジェクトを入れる
 		    objList.add(outputObj);

@@ -3,44 +3,43 @@ package com.example.demo.controller.api;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Locale;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 
-import com.example.demo.controller.api.WebController;
 
 @SpringBootTest
 class WebControllerTests {
 	
-	//
-	private WebController webController =  new WebController();
+	@Autowired
+	private WebController webController;
 	private JSONObject case1 =  new JSONObject();
-	private JSONObject case2 =  new JSONObject();
-	private JSONObject case3 =  new JSONObject();
+
+	@Autowired
+	protected MessageSource messageSource;
 	
 	@Test
 	void SyainInfoTest1() throws JSONException {
-		//assertTrue(webController.SyainInfo("3").equals(""));
-	}
-	
-	@Test
-	void SyainInfoTest2() throws JSONException {
-		case2.put("社員番号","1");
-		case2.put("名前", "新垣");
-		case2.put("年齢", 23);
-		case2.put("所属", "営業");
-		//assertTrue(webController.SyainInfo("1").equals(case2.toString()));
-	}
-	
-	@Test
-	void SyainInfoTest3() throws JSONException {	
-		case3.put("社員番号","2");
-		case3.put("名前", "上原");
-		case3.put("年齢", 24);
-		case3.put("所属", "経理");
-		//assertTrue(webController.SyainInfo("2").equals(case3.toString()));
+		JSONObject empObj =  new JSONObject();
+		empObj.put("社員番号","10001");
+		empObj.put("名前", "新垣");
+		empObj.put("年齢", "23");
+		empObj.put("所属", "開発者");		
+		
+		// status番号を入れる(失敗)
+		case1.put("status","200");
+	    // messageを入れる
+		case1.put("messeage",messageSource.getMessage("200", null, Locale.JAPAN));
+	    // 取得した社員データを入れる
+		case1.put("data", empObj);
+		
+		assertTrue(webController.SyainInfo("10001").equals(case1.toString()));
 	}
 	
 }
